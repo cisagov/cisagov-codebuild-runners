@@ -38,45 +38,60 @@ module "example" {
 
 | Name | Version |
 | ---- | ------- |
-| terraform | >= 1.1 |
-| aws | >= 4.9 |
+| terraform | ~> 1.1 |
+| aws | ~> 6.64 |
+| github | ~> 6.13 |
 
 ## Providers ##
 
 | Name | Version |
 | ---- | ------- |
-| aws | >= 4.9 |
+| aws | ~> 6.64 |
+| aws.userservicesprovisionaccount | ~> 6.64 |
+| github | ~> 6.13 |
+| terraform | n/a |
 
 ## Modules ##
 
-No modules.
+| Name | Source | Version |
+| ---- | ------ | ------- |
+| github\_runner | cloudandthings/github-runners/aws | 4.1.0 |
 
 ## Resources ##
 
 | Name | Type |
 | ---- | ---- |
-| [aws_instance.example](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
-| [aws_ami.example](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
-| [aws_default_tags.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/default_tags) | data source |
+| [aws_iam_policy.provisionrunners_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_role_policy_attachment.provisionrunners_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [github_actions_runner_group.codebuild](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_runner_group) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.provisionrunners_policy_doc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [github_repository.runner](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/repository) | data source |
+| [terraform_remote_state.userservices](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs ##
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| ami\_owner\_account\_id | The ID of the AWS account that owns the Example AMI, or "self" if the AMI is owned by the same account as the provisioner. | `string` | `"self"` | no |
-| aws\_availability\_zone | The AWS availability zone to deploy into (e.g. a, b, c, etc.). | `string` | `"a"` | no |
-| aws\_region | The AWS region to deploy into (e.g. us-east-1). | `string` | `"us-east-1"` | no |
-| subnet\_id | The ID of the AWS subnet to deploy into (e.g. subnet-0123456789abcdef0). | `string` | n/a | yes |
+| aws\_region | The AWS region in which to deploy the CodeBuild runners (e.g. us-east-1). | `string` | `"us-east-1"` | no |
+| github\_codeconnection\_arn | ARN of the AWS CodeConnections GitHub App connection. | `string` | n/a | yes |
+| github\_organization | GitHub organization containing the repositories. | `string` | n/a | yes |
+| provisionaccount\_role\_name | The name of the IAM role that allows sufficient permissions to provision all AWS resources in the User Services account. | `string` | `"ProvisionAccount"` | no |
+| provisionrunners\_policy\_description | The description to associate with the IAM policy that allows provisioning of CodeBuild GitHub runners in the User Services account. | `string` | `"Allows provisioning of CodeBuild GitHub runners in the User Services account."` | no |
+| provisionrunners\_policy\_name | The name to assign the IAM policy that allows provisioning of CodeBuild GitHub runners in the User Services account. | `string` | `"ProvisionCodeBuildRunners"` | no |
+| runner\_group\_name | Name of the GitHub Actions runner group. | `string` | `"codebuild"` | no |
+| runner\_repositories | GitHub repositories allowed to use the CodeBuild runners. | `set(string)` | n/a | yes |
+| tags | Tags to apply to all AWS resources created. | `map(string)` | `{}` | no |
+| terraform\_state\_bucket | The name of the S3 bucket where Terraform state is stored. | `string` | n/a | yes |
 
 ## Outputs ##
 
 | Name | Description |
 | ---- | ----------- |
-| arn | The EC2 instance ARN. |
-| availability\_zone | The AZ where the EC2 instance is deployed. |
-| id | The EC2 instance ID. |
-| private\_ip | The private IP of the EC2 instance. |
-| subnet\_id | The ID of the subnet where the EC2 instance is deployed. |
+| codebuild\_runners | The CodeBuild runners. |
+| github\_actions\_runner\_group | The group of repos allowed to use the CodeBuild runners. |
+| provisionrunners\_policy | The IAM policy that allows for creation of CodeBuild GitHub runners. |
+| provisionrunners\_policy\_attachment | The attachment for the IAM policy that allows for creation of CodeBuild GitHub runners. |
 <!-- END_TF_DOCS -->
 
 ## Notes ##
