@@ -34,7 +34,7 @@ GitHub](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-creat
 
 ```hcl
 module "example" {
-  source = "github.com/cisagov/cisagov-codebuild-runners?ref=v0.0.1"
+  source = "github.com/cisagov/cisagov-codebuild-runners?ref=v1.0.0"
 
   aws_region            = "us-west-1"
   aws_availability_zone = "b"
