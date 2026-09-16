@@ -4,18 +4,31 @@
 [![License](https://img.shields.io/github/license/cisagov/cisagov-codebuild-runners)](https://spdx.org/licenses/)
 [![CodeQL](https://github.com/cisagov/cisagov-codebuild-runners/workflows/CodeQL/badge.svg)](https://github.com/cisagov/cisagov-codebuild-runners/actions/workflows/codeql-analysis.yml)
 
-This is a generic skeleton project that can be used to quickly get a
-new [cisagov](https://github.com/cisagov) [Terraform
-module](https://www.terraform.io/docs/modules/index.html) GitHub
-repository started.  This skeleton project contains [licensing
-information](LICENSE), as well as [pre-commit
-hooks](https://pre-commit.com) and
-[GitHub Actions](https://github.com/features/actions) configurations
-appropriate for the major languages that we use.
+This is a Terraform project for setting up ephemeral, self-hosted
+GitHub Actions runners in AWS CodeBuild.
 
-See the [Terraform
-documentation](https://www.terraform.io/docs/modules/index.html) for
-more details on Terraform modules and the standard module structure.
+## Prerequisites ##
+
+### GitHub permissions ###
+
+You will need to set up your local `gh` client with organization-level
+permissions:
+
+```console
+gh auth refresh --scopes admin:org
+```
+
+After deploying this Terraform code you can re-authenticate to return
+to the default minimum scope:
+
+```console
+gh auth refresh --reset-scopes
+```
+
+### Connection between AWS and GitHub ###
+
+You must also [create a connection between AWS and
+GitHub](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-create-github.html).
 
 ## Usage ##
 
@@ -97,15 +110,7 @@ module "example" {
 ## Notes ##
 
 Running `pre-commit` requires running `terraform init` in every directory that
-contains Terraform code. In this repository, these are the main directory and
-every directory under `examples/`.
-
-## New Repositories from a Skeleton ##
-
-Please see our [Project Setup guide](https://github.com/cisagov/development-guide/tree/develop/project_setup)
-for step-by-step instructions on how to start a new repository from
-a skeleton. This will save you time and effort when configuring a
-new repository!
+contains Terraform code. In this repository, this is only the main directory.
 
 ## Contributing ##
 
