@@ -5,8 +5,9 @@ data "github_repository" "runner" {
 }
 
 resource "github_actions_runner_group" "codebuild" {
-  name       = var.runner_group_name
-  visibility = "selected"
+  allows_public_repositories = true
+  name                       = var.runner_group_name
+  visibility                 = "selected"
 
   selected_repository_ids = [
     for repository in data.github_repository.runner :
