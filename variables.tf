@@ -39,6 +39,17 @@ variable "aws_region" {
   type        = string
 }
 
+variable "build_timeout" {
+  description = "Number of minutes before a CodeBuild-hosted GitHub Actions runner times out."
+  type        = number
+  default     = 8 * 60
+
+  validation {
+    condition     = var.build_timeout >= 5 && var.build_timeout <= 2160
+    error_message = "build_timeout must be between 5 and 2160 minutes."
+  }
+}
+
 variable "provisionaccount_role_name" {
   default     = "ProvisionAccount"
   description = "The name of the IAM role that allows sufficient permissions to provision all AWS resources in the User Services account."

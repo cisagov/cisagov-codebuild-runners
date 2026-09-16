@@ -7,7 +7,8 @@ module "github_runner" {
   source  = "cloudandthings/github-runners/aws"
   version = "4.1.0"
 
-  name = "${var.github_organization}-${each.key}"
+  build_timeout = var.build_timeout
+  name          = "${var.github_organization}-${each.key}"
 
   # Use an organization-level GitHub webhook.
   source_location     = "CODEBUILD_DEFAULT_WEBHOOK_SOURCE_LOCATION"

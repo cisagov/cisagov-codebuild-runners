@@ -87,6 +87,7 @@ module "example" {
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | aws\_region | The AWS region in which to deploy the CodeBuild runners (e.g. us-east-1). | `string` | `"us-east-1"` | no |
+| build\_timeout | Number of minutes before a CodeBuild-hosted GitHub Actions runner times out. | `number` | `480` | no |
 | github\_codeconnection\_arn | ARN of the AWS CodeConnections GitHub App connection. | `string` | n/a | yes |
 | github\_organization | GitHub organization containing the repositories. | `string` | n/a | yes |
 | provisionaccount\_role\_name | The name of the IAM role that allows sufficient permissions to provision all AWS resources in the User Services account. | `string` | `"ProvisionAccount"` | no |
