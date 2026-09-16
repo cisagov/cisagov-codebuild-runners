@@ -1,13 +1,15 @@
 locals {
   architectures = {
     amd64 = {
-      environment_type  = "LINUX_CONTAINER"
+      compute_type      = "BUILD_GENERAL1_MEDIUM"
       environment_image = "aws/codebuild/standard:8.0"
+      environment_type  = "LINUX_CONTAINER"
     }
 
     arm64 = {
-      environment_type  = "ARM_CONTAINER"
+      compute_type      = "BUILD_GENERAL1_MEDIUM"
       environment_image = "aws/codebuild/amazonlinux-aarch64-standard:3.0"
+      environment_type  = "ARM_CONTAINER"
     }
   }
 

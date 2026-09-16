@@ -14,8 +14,9 @@ module "github_runner" {
   source_organization = var.github_organization
 
   # Architecture-specific CodeBuild environment.
-  environment_type  = each.value.environment_type
-  environment_image = each.value.environment_image
+  environment_compute_type = each.value.compute_type
+  environment_image        = each.value.environment_image
+  environment_type         = each.value.environment_type
 
   # AWS CodeConnections GitHub App.
   github_codeconnection_arn = var.github_codeconnection_arn
