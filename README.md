@@ -11,8 +11,10 @@ GitHub Actions runners in AWS CodeBuild.
 
 ### GitHub permissions ###
 
-You will need to set up your local `gh` client with organization-level
-permissions:
+The Terraform GitHub provider leverages your local `gh` CLI tool's
+authentication; hence, for the provider to make the necessary GitHub
+organization changes you will need to set up your local `gh` client
+with organization-level permissions:
 
 ```console
 gh auth refresh --scopes admin:org
