@@ -4,93 +4,105 @@
 [![License](https://img.shields.io/github/license/cisagov/cisagov-codebuild-runners)](https://spdx.org/licenses/)
 [![CodeQL](https://github.com/cisagov/cisagov-codebuild-runners/workflows/CodeQL/badge.svg)](https://github.com/cisagov/cisagov-codebuild-runners/actions/workflows/codeql-analysis.yml)
 
-This is a generic skeleton project that can be used to quickly get a
-new [cisagov](https://github.com/cisagov) [Terraform
-module](https://www.terraform.io/docs/modules/index.html) GitHub
-repository started.  This skeleton project contains [licensing
-information](LICENSE), as well as [pre-commit
-hooks](https://pre-commit.com) and
-[GitHub Actions](https://github.com/features/actions) configurations
-appropriate for the major languages that we use.
+This is a Terraform project for setting up ephemeral, self-hosted
+GitHub Actions runners in AWS CodeBuild.
 
-See the [Terraform
-documentation](https://www.terraform.io/docs/modules/index.html) for
-more details on Terraform modules and the standard module structure.
+## Prerequisites ##
 
-## Usage ##
+### GitHub permissions ###
 
-```hcl
-module "example" {
-  source = "github.com/cisagov/cisagov-codebuild-runners?ref=v0.0.1"
+The Terraform GitHub provider leverages your local `gh` CLI tool's
+authentication; hence, for the provider to make the necessary GitHub
+organization changes you will need to set up your local `gh` client
+with organization-level permissions:
 
-  aws_region            = "us-west-1"
-  aws_availability_zone = "b"
-  subnet_id             = "subnet-0123456789abcdef0"
-}
+```console
+gh auth refresh --scopes admin:org
 ```
 
-## Examples ##
+After deploying this Terraform code you can re-authenticate to return
+to the default minimum scope:
 
-- [Basic usage](https://github.com/cisagov/cisagov-codebuild-runners/tree/develop/examples/basic_usage)
+```console
+gh auth refresh --reset-scopes
+```
+
+### Complete connection between AWS and GitHub ###
+
+After creating the AWS CodeConnections resource via Terraform, you
+must [update the pending connection between AWS and
+GitHub](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-update.html).
+There is no way to do this using Terraform or the AWS CLI, and the
+rest of the deployment will fail until you do this.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements ##
 
 | Name | Version |
 | ---- | ------- |
-| terraform | >= 1.1 |
-| aws | >= 4.9 |
+| terraform | ~> 1.1 |
+| aws | ~> 6.64 |
+| github | ~> 6.13 |
 
 ## Providers ##
 
 | Name | Version |
 | ---- | ------- |
-| aws | >= 4.9 |
+| aws | ~> 6.64 |
+| aws.userservicesprovisionaccount | ~> 6.64 |
+| github | ~> 6.13 |
+| terraform | n/a |
 
 ## Modules ##
 
-No modules.
+| Name | Source | Version |
+| ---- | ------ | ------- |
+| github\_runner | cloudandthings/github-runners/aws | 4.1.0 |
 
 ## Resources ##
 
 | Name | Type |
 | ---- | ---- |
-| [aws_instance.example](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
-| [aws_ami.example](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
-| [aws_default_tags.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/default_tags) | data source |
+| [aws_codeconnections_connection.github](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codeconnections_connection) | resource |
+| [aws_iam_policy.provisionrunners_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_role_policy_attachment.provisionrunners_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [github_actions_runner_group.codebuild](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_runner_group) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.provisionrunners_policy_doc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [github_repository.runner](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/repository) | data source |
+| [terraform_remote_state.userservices](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs ##
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| ami\_owner\_account\_id | The ID of the AWS account that owns the Example AMI, or "self" if the AMI is owned by the same account as the provisioner. | `string` | `"self"` | no |
-| aws\_availability\_zone | The AWS availability zone to deploy into (e.g. a, b, c, etc.). | `string` | `"a"` | no |
-| aws\_region | The AWS region to deploy into (e.g. us-east-1). | `string` | `"us-east-1"` | no |
-| subnet\_id | The ID of the AWS subnet to deploy into (e.g. subnet-0123456789abcdef0). | `string` | n/a | yes |
+| aws\_region | The AWS region in which to deploy the CodeBuild runners (e.g. us-east-1). | `string` | `"us-east-1"` | no |
+| build\_timeout | Number of minutes before a CodeBuild-hosted GitHub Actions runner times out. | `number` | `480` | no |
+| github\_codeconnection\_arn | ARN of the AWS CodeConnections GitHub App connection. | `string` | n/a | yes |
+| github\_organization | GitHub organization containing the repositories. | `string` | n/a | yes |
+| provisionaccount\_role\_name | The name of the IAM role that allows sufficient permissions to provision all AWS resources in the User Services account. | `string` | `"ProvisionAccount"` | no |
+| provisionrunners\_policy\_description | The description to associate with the IAM policy that allows provisioning of CodeBuild GitHub runners in the User Services account. | `string` | `"Allows provisioning of CodeBuild GitHub runners in the User Services account."` | no |
+| provisionrunners\_policy\_name | The name to assign the IAM policy that allows provisioning of CodeBuild GitHub runners in the User Services account. | `string` | `"ProvisionCodeBuildRunners"` | no |
+| runner\_group\_name | Name of the GitHub Actions runner group. | `string` | `"codebuild"` | no |
+| runner\_repositories | GitHub repositories allowed to use the CodeBuild runners. | `set(string)` | n/a | yes |
+| tags | Tags to apply to all AWS resources created. | `map(string)` | `{}` | no |
+| terraform\_state\_bucket | The name of the S3 bucket where Terraform state is stored. | `string` | n/a | yes |
 
 ## Outputs ##
 
 | Name | Description |
 | ---- | ----------- |
-| arn | The EC2 instance ARN. |
-| availability\_zone | The AZ where the EC2 instance is deployed. |
-| id | The EC2 instance ID. |
-| private\_ip | The private IP of the EC2 instance. |
-| subnet\_id | The ID of the subnet where the EC2 instance is deployed. |
+| codebuild\_runners | The CodeBuild runners. |
+| github\_actions\_runner\_group | The group of repos allowed to use the CodeBuild runners. |
+| github\_connection | The connection between GitHub and AWS CodeBuild. |
+| provisionrunners\_policy | The IAM policy that allows for creation of CodeBuild GitHub runners. |
+| provisionrunners\_policy\_attachment | The attachment for the IAM policy that allows for creation of CodeBuild GitHub runners. |
 <!-- END_TF_DOCS -->
 
 ## Notes ##
 
 Running `pre-commit` requires running `terraform init` in every directory that
-contains Terraform code. In this repository, these are the main directory and
-every directory under `examples/`.
-
-## New Repositories from a Skeleton ##
-
-Please see our [Project Setup guide](https://github.com/cisagov/development-guide/tree/develop/project_setup)
-for step-by-step instructions on how to start a new repository from
-a skeleton. This will save you time and effort when configuring a
-new repository!
+contains Terraform code. In this repository, this is only the main directory.
 
 ## Contributing ##
 
