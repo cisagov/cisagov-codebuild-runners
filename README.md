@@ -44,10 +44,6 @@ module "example" {
 }
 ```
 
-## Examples ##
-
-- [Basic usage](https://github.com/cisagov/cisagov-codebuild-runners/tree/develop/examples/basic_usage)
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements ##
 
