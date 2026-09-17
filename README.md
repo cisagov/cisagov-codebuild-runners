@@ -27,22 +27,13 @@ to the default minimum scope:
 gh auth refresh --reset-scopes
 ```
 
-### Connection between AWS and GitHub ###
+### Complete connection between AWS and GitHub ###
 
-You must also [create a connection between AWS and
-GitHub](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-create-github.html).
-
-## Usage ##
-
-```hcl
-module "example" {
-  source = "github.com/cisagov/cisagov-codebuild-runners?ref=v1.0.0"
-
-  aws_region            = "us-west-1"
-  aws_availability_zone = "b"
-  subnet_id             = "subnet-0123456789abcdef0"
-}
-```
+After creating the AWS CodeConnections resource via Terraform, you
+must [update the pending connection between AWS and
+GitHub](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-update.html).
+There is no way to do this using Terraform or the AWS CLI, and the
+rest of the deployment will fail until you do this.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements ##
@@ -72,6 +63,7 @@ module "example" {
 
 | Name | Type |
 | ---- | ---- |
+| [aws_codeconnections_connection.github](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/codeconnections_connection) | resource |
 | [aws_iam_policy.provisionrunners_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role_policy_attachment.provisionrunners_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [github_actions_runner_group.codebuild](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_runner_group) | resource |
@@ -102,6 +94,7 @@ module "example" {
 | ---- | ----------- |
 | codebuild\_runners | The CodeBuild runners. |
 | github\_actions\_runner\_group | The group of repos allowed to use the CodeBuild runners. |
+| github\_connection | The connection between GitHub and AWS CodeBuild. |
 | provisionrunners\_policy | The IAM policy that allows for creation of CodeBuild GitHub runners. |
 | provisionrunners\_policy\_attachment | The attachment for the IAM policy that allows for creation of CodeBuild GitHub runners. |
 <!-- END_TF_DOCS -->

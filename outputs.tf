@@ -8,6 +8,11 @@ output "github_actions_runner_group" {
   value       = github_actions_runner_group.codebuild
 }
 
+output "github_connection" {
+  description = "The connection between GitHub and AWS CodeBuild."
+  value       = aws_codeconnections_connection.github
+}
+
 output "provisionrunners_policy" {
   description = "The IAM policy that allows for creation of CodeBuild GitHub runners."
   value       = aws_iam_policy.provisionrunners_policy

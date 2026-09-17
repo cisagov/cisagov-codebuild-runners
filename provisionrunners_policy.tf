@@ -15,6 +15,10 @@ data "aws_iam_policy_document" "provisionrunners_policy_doc" {
       "codebuild:ImportSourceCredentials",
       "codebuild:ListSourceCredentials",
       "codebuild:UpdateProject",
+
+      "codeconnections:GetConnection",
+      "codeconnections:ListTagsForResource",
+      "codeconnections:TagResource",
     ]
 
     resources = [
