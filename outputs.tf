@@ -1,24 +1,24 @@
-output "arn" {
-  description = "The EC2 instance ARN."
-  value       = aws_instance.example.arn
+output "codebuild_runners" {
+  description = "The CodeBuild runners."
+  value       = module.github_runner
 }
 
-output "availability_zone" {
-  description = "The AZ where the EC2 instance is deployed."
-  value       = aws_instance.example.availability_zone
+output "github_actions_runner_group" {
+  description = "The group of repos allowed to use the CodeBuild runners."
+  value       = github_actions_runner_group.codebuild
 }
 
-output "id" {
-  description = "The EC2 instance ID."
-  value       = aws_instance.example.id
+output "github_connection" {
+  description = "The connection between GitHub and AWS CodeBuild."
+  value       = aws_codeconnections_connection.github
 }
 
-output "private_ip" {
-  description = "The private IP of the EC2 instance."
-  value       = aws_instance.example.private_ip
+output "provisionrunners_policy" {
+  description = "The IAM policy that allows for creation of CodeBuild GitHub runners."
+  value       = aws_iam_policy.provisionrunners_policy
 }
 
-output "subnet_id" {
-  description = "The ID of the subnet where the EC2 instance is deployed."
-  value       = aws_instance.example.subnet_id
+output "provisionrunners_policy_attachment" {
+  description = "The attachment for the IAM policy that allows for creation of CodeBuild GitHub runners."
+  value       = aws_iam_role_policy_attachment.provisionrunners_policy_attachment
 }
