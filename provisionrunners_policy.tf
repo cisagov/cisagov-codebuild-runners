@@ -4,21 +4,25 @@
 # ------------------------------------------------------------------------------
 
 data "aws_iam_policy_document" "provisionrunners_policy_doc" {
-  # This policy needs to be more restricted, obviously
   statement {
     actions = [
       "codebuild:BatchGetProjects",
       "codebuild:CreateProject",
       "codebuild:CreateWebhook",
       "codebuild:DeleteProject",
+      "codebuild:DeleteWebhook",
       "codebuild:DeleteSourceCredentials",
       "codebuild:ImportSourceCredentials",
       "codebuild:ListSourceCredentials",
       "codebuild:UpdateProject",
+      "codebuild:UpdateWebhook",
 
+      "codeconnections:CreateConnection",
+      "codeconnections:DeleteConnection",
       "codeconnections:GetConnection",
       "codeconnections:ListTagsForResource",
       "codeconnections:TagResource",
+      "codeconnections:UntagResource",
     ]
 
     resources = [
