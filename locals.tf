@@ -19,6 +19,6 @@ locals {
 
   runner_repositories_regex = format(
     "^(%s)$",
-    join("|", sort(tolist(var.runner_repositories))),
+    join("|", [for repository in sort(tolist(var.runner_repositories)) : replace(repository, ".", "\\\\.")]),
   )
 }
