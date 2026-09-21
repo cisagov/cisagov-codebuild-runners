@@ -20,7 +20,7 @@ module "github_runner" {
   environment_type         = each.value.environment_type
 
   # AWS CodeConnections GitHub App.
-  github_codeconnection_arn = var.github_codeconnection_arn
+  github_codeconnection_arn = aws_codeconnections_connection.github.arn
 
   # Register runners at the organization level and put them
   # into our restricted GitHub Actions runner group.

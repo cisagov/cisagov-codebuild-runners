@@ -9,12 +9,6 @@ variable "github_organization" {
   type        = string
 }
 
-variable "github_codeconnection_arn" {
-  description = "ARN of the AWS CodeConnections GitHub App connection."
-  nullable    = false
-  type        = string
-}
-
 variable "runner_repositories" {
   description = "GitHub repositories allowed to use the CodeBuild runners."
   nullable    = false

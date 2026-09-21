@@ -68,6 +68,7 @@ rest of the deployment will fail until you do this.
 | [aws_iam_role_policy_attachment.provisionrunners_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [github_actions_runner_group.codebuild](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_runner_group) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_caller_identity.user_services](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.provisionrunners_policy_doc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [github_repository.runner](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/repository) | data source |
 | [terraform_remote_state.userservices](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
@@ -78,7 +79,6 @@ rest of the deployment will fail until you do this.
 | ---- | ----------- | ---- | ------- | :------: |
 | aws\_region | The AWS region in which to deploy the CodeBuild runners (e.g. us-east-1). | `string` | `"us-east-1"` | no |
 | build\_timeout | Number of minutes before a CodeBuild-hosted GitHub Actions runner times out. | `number` | `480` | no |
-| github\_codeconnection\_arn | ARN of the AWS CodeConnections GitHub App connection. | `string` | n/a | yes |
 | github\_organization | GitHub organization containing the repositories. | `string` | n/a | yes |
 | provisionaccount\_role\_name | The name of the IAM role that allows sufficient permissions to provision all AWS resources in the User Services account. | `string` | `"ProvisionAccount"` | no |
 | provisionrunners\_policy\_description | The description to associate with the IAM policy that allows provisioning of CodeBuild GitHub runners in the User Services account. | `string` | `"Allows provisioning of CodeBuild GitHub runners in the User Services account."` | no |
